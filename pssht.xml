@@ -135,7 +135,7 @@
 
     <services>
         <!-- The "client" service is used to handle new clients. -->
-        <service id="client" scope="prototype" class="\fpoirotte\Pssht\Transport">
+        <service id="client" shared="false" class="\fpoirotte\Pssht\Transport">
             <argument>%server_keys%</argument>
             <argument type="service" id="authMethods"/>
 
@@ -162,7 +162,8 @@
         <!-- End of "client" service. -->
 
         <!-- The "logging" service is used to log messages. -->
-        <service id="logging" factory-class="\Plop\Plop" factory-method="getInstance">
+        <service id="logging">
+            <factory class="\Plop\Plop" method="getInstance" />
             <call method="addLogger">
                 <argument type="service">
                     <service class="\Plop\Logger">
@@ -202,10 +203,10 @@
             The "authMethods" service is used to indicate
             which authentication methods are allowed.
         -->
-        <service id="authMethods" scope="prototype" public="false"
+        <service id="authMethods" shared="false" public="false"
             class="\fpoirotte\Pssht\Handlers\SERVICE\REQUEST">
             <argument type="service">
-                <service scope="prototype"
+                <service shared="false"
                     class="\fpoirotte\Pssht\Handlers\USERAUTH\REQUEST">
                     <argument type="collection">
 
@@ -229,9 +230,9 @@
                         <argument type="service">
                             <service class="\fpoirotte\Pssht\Authentication\PublicKey">
                                 <argument type="service">
-                                    <service public="false"
-                                        factory-service="authPublicKeysLoader"
-                                        factory-method="getStore"/>
+                                    <service public="false">
+                                        <factory service="authPublicKeysLoader" method="getStore" />
+                                    </service>
                                 </argument>
                             </service>
                         </argument>
@@ -245,9 +246,9 @@
                         <argument type="service">
                             <service class="\fpoirotte\Pssht\Authentication\HostBased">
                                 <argument type="service">
-                                    <service public="false"
-                                        factory-service="authHostBasedLoader"
-                                        factory-method="getStore"/>
+                                    <service public="false">
+                                        <factory service="authHostBasedLoader" method="getStore" />
+                                    </service>
                                 </argument>
                             </service>
                         </argument>
